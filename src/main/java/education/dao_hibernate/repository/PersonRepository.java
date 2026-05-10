@@ -1,21 +1,19 @@
 package education.dao_hibernate.repository;
 
 import education.dao_hibernate.Person;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class PersonRepository {
+public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    // CRUD методы
 
-    public List<Person> getPersonsByCity(String city) {
-        return entityManager.createQuery(
-                        "SELECT p FROM Person p WHERE p.cityOfLiving = :city", Person.class)
-                .setParameter("city", city)
-                .getResultList();
-    }
+    List<Person> findByCityOfLiving(String city);
+
+    List<Person> findByAgeLessThanOrderByAgeAsc(Integer age);
+
+    Optional<Person> findFirstByNameAndSurname(String name, String surname);
 }
